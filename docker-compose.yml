@@ -1,0 +1,15 @@
+services:
+  portfolio:
+    build:
+      context: .
+    container_name: portfolio
+    ports:
+      # 3001 no host porque a 3000 já é do MathType — os dois sobem lado a lado
+      # sem conflito. Dentro do container a porta continua sendo a 3000.
+      #
+      # Em produção quem resolve `/` e `/mathtype` é o proxy do domínio; este
+      # mapeamento existe para rodar e conferir a imagem localmente.
+      - "3001:3000"
+    environment:
+      - NODE_ENV=production
+    restart: unless-stopped

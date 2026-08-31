@@ -1,26 +1,80 @@
 @import "tailwindcss";
 
+/*
+ * Paleta herdada do MathType (`app/globals.css` de lá).
+ *
+ * Os dois aplicativos são servidos pelo mesmo domínio e o cabeçalho leva de um
+ * ao outro. Cores próprias fariam a travessia parecer um salto para outro
+ * produto; reusar o mesmo navy e o mesmo azul de ação faz o `/mathtype` parecer
+ * o que é — outra parte do mesmo lugar.
+ *
+ * Tema escuro apenas, por decisão de design. `color-scheme` está declarado para
+ * que barras de rolagem e controles nativos acompanhem em vez de aparecerem
+ * claros sobre o fundo escuro.
+ */
+@theme {
+  --color-bg: #0a0f1e;
+  --color-raised: #101830;
+  --color-line: #1c2a4a;
+  --color-ink: #dbe4ff;
+  --color-dim: #7c8cb5;
+  --color-faint: #3d4c73;
+  --color-accent: #4f8dff;
+
+  --font-sans: var(--font-geist-sans), system-ui, sans-serif;
+  --font-mono: var(--font-geist-mono), 'JetBrains Mono', Consolas, monospace;
+}
+
 :root {
-  --background: #ffffff;
-  --foreground: #171717;
+  color-scheme: dark;
 }
 
-@theme inline {
-  --color-background: var(--background);
-  --color-foreground: var(--foreground);
-  --font-sans: var(--font-geist-sans);
-  --font-mono: var(--font-geist-mono);
+/*
+ * Fontes CJK por idioma: a Geist não tem os glifos de chinês, japonês nem
+ * coreano — sem isto o texto vira caixinhas. O `data-locale` é posto no
+ * `<html>` pelo layout, e só a Noto do idioma ativo é carregada.
+ */
+html[data-locale='zh'] body { font-family: var(--font-geist-sans), 'Noto Sans SC', system-ui, sans-serif; }
+html[data-locale='ja'] body { font-family: var(--font-geist-sans), 'Noto Sans JP', system-ui, sans-serif; }
+html[data-locale='ko'] body { font-family: var(--font-geist-sans), 'Noto Sans KR', system-ui, sans-serif; }
+
+body {
+  background: var(--color-bg);
+  color: var(--color-ink);
+  /*
+   * Dois halos muito difusos, iguais aos do MathType: quebram a chapa de cor
+   * sólida sem virar um gradiente perceptível. `fixed` para que não deslizem
+   * junto com a rolagem e denunciem que são só duas manchas.
+   */
+  background-image:
+    radial-gradient(1200px 600px at 50% -10%, #14204255 0%, transparent 60%),
+    radial-gradient(800px 500px at 90% 110%, #0e2a5c33 0%, transparent 55%);
+  background-attachment: fixed;
+  -webkit-font-smoothing: antialiased;
 }
 
-@media (prefers-color-scheme: dark) {
-  :root {
-    --background: #0a0a0a;
-    --foreground: #ededed;
+/*
+ * Compensa a altura do cabeçalho fixo ao pular por âncora: sem isto o título
+ * da seção alvo fica escondido atrás dele.
+ */
+html {
+  scroll-behavior: smooth;
+  scroll-padding-top: 5rem;
+}
+
+/* Quem pediu menos movimento no sistema não quer a rolagem animada. */
+@media (prefers-reduced-motion: reduce) {
+  html { scroll-behavior: auto; }
+  *, *::before, *::after {
+    animation-duration: 0.01ms !important;
+    animation-iteration-count: 1 !important;
+    transition-duration: 0.01ms !important;
   }
 }
 
-body {
-  background: var(--background);
-  color: var(--foreground);
-  font-family: Arial, Helvetica, sans-serif;
+/* Foco visível e consistente — o padrão do navegador some sobre o fundo escuro. */
+:focus-visible {
+  outline: 2px solid var(--color-accent);
+  outline-offset: 2px;
+  border-radius: 4px;
 }
