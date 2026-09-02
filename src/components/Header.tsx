@@ -47,24 +47,6 @@ export default function Header({ t, locale }: { t: Dictionary; locale: Locale })
 
         <div className="ml-auto flex items-center gap-2.5 md:ml-0">
           <LanguageSwitcher locale={locale} label={t.nav.languageLabel} />
-
-          {/*
-            Âncora comum, **não** `next/Link`: `/mathtype` é outra aplicação, em
-            outro container, com o `basePath` dela. O `<Link>` trataria o
-            caminho como rota interna — faria prefetch, não acharia nada e
-            tentaria uma navegação de cliente que este roteador não sabe
-            resolver. O `<a>` deixa a requisição sair para o proxy, que é quem
-            sabe para onde ela vai.
-          */}
-          <a
-            href="/mathtype"
-            className="rounded-md border border-accent/40 bg-accent/10 px-3 py-1.5 font-mono text-xs font-medium text-accent transition-colors hover:border-accent hover:bg-accent/20"
-          >
-            {t.nav.mathtype}
-            <span aria-hidden="true" className="ml-1.5 opacity-60">
-              ↗
-            </span>
-          </a>
         </div>
       </div>
     </header>
